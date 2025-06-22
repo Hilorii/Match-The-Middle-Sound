@@ -88,10 +88,10 @@ html, body {
   box-shadow: 0 2px 4px rgba(0,0,0,.05);
   user-select: none;
 }
-.card:hover {
-  scale: 1.1;
-  transition: ease-in 0.2s;
-}
+/*.card:hover {*/
+/*  scale: 1.1;*/
+/*  transition: ease-in 0.2s;*/
+/*}*/
 
 /* ----- przycisk Submit ----- */
 button.submit-btn {
