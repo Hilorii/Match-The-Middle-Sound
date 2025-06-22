@@ -1,47 +1,54 @@
-import { useState, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
     DndContext,
     PointerSensor,
+    TouchSensor,
     useSensor,
-    useSensors
+    useSensors,
 } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
 import type { Word } from './data/words';
 import Column from './components/Column';
-import Pool from './components/Pool';
+import Pool   from './components/Pool';
 import { words as initial} from './data/words';
 
-type Containers = {
-    pool: Word[];
-    a: Word[];
-    i: Word[];
-};
+/* ------ audio pliki przez bundler ------ */
+import winMp3  from '/audio/win.mp3?url';
+import loseMp3 from '/audio/lose.mp3?url';
+
+type Boxes = { pool: Word[]; a: Word[]; i: Word[] };
 
 export default function App() {
-    /* ---------- stan kart ---------- */
-    const [items, setItems] = useState<Containers>({
+    const [items, setItems] = useState<Boxes>({
         pool: initial,
         a: [],
         i: [],
     });
 
-    /* ---------- dźwięki ---------- */
-    const winRef  = useRef(new Audio('/audio/win.mp3'));
-    const loseRef = useRef(new Audio('/audio/lose.mp3'));
+    /* ------ audio refs (po jednym obiekcie) ------ */
+    const winRef  = useRef<HTMLAudioElement | null>(null);
+    const loseRef = useRef<HTMLAudioElement | null>(null);
 
-    /* ---------- DnD ---------- */
+    useEffect(() => {
+        winRef.current  = new Audio(winMp3);
+        loseRef.current = new Audio(loseMp3);
+    }, []);
+
+
+    /* ------ DnD sensors: pointer + touch (fallback) ------ */
     const sensors = useSensors(
-        useSensor(PointerSensor, { activationConstraint: { distance: 8 } })
+        useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
+        useSensor(TouchSensor,   { activationConstraint: { delay: 150, tolerance: 5 } })
     );
 
-    const handleDragEnd = (event: DragEndEvent) => {
-        const { active, over } = event;
+    const handleDragEnd = (e: DragEndEvent) => {
+        const { active, over } = e;
         if (!over) return;
 
-        const fromId = (Object.keys(items) as (keyof Containers)[])
-            .find((key) => items[key].some((w) => w.id === active.id));
+        const fromId = (Object.keys(items) as (keyof Boxes)[])
+            .find((k) => items[k].some((w) => w.id === active.id));
 
-        const toId = over.id as keyof Containers;
+        const toId = over.id as keyof Boxes;
         if (!fromId || fromId === toId) return;
 
         setItems((prev) => {
@@ -49,7 +56,7 @@ export default function App() {
             return {
                 ...prev,
                 [fromId]: prev[fromId].filter((w) => w.id !== active.id),
-                [toId]: [...prev[toId], moved],
+                [toId]:   [...prev[toId], moved],
             };
         });
     };
@@ -60,19 +67,22 @@ export default function App() {
         const wrongI = items.i.filter((w) => w.vowel !== 'i');
         const done   = items.pool.length === 0;
 
-        const success = !wrongA.length && !wrongI.length && done;
+        const ok = !wrongA.length && !wrongI.length && done;
 
-        const ref = success ? winRef : loseRef;
-        ref.current.currentTime = 0;
-        ref.current.play();
+        /* ----- ODTWÓRZ WŁAŚCIWY DŹWIĘK ----- */
+        const ref = ok ? winRef.current : loseRef.current;
+        if (ref) {
+            ref.currentTime = 0;
+            ref.play();
+        }
 
-        alert(success ? 'Great job! 🎉' : 'Try again 🙈');
+        alert(ok ? 'Great job! 🎉' : 'Try again 🙈');
     };
 
-    /* ---------- UI ---------- */
+    /* ------ UI ------ */
     return (
         <div className="wrapper">
-            <h1 className="title">Match the Middle Sound</h1>
+            <h1 className="title">Match&nbsp;the&nbsp;Middle&nbsp;Sound</h1>
 
             <div className="board">
                 <DndContext sensors={sensors} onDragEnd={handleDragEnd}>
@@ -81,7 +91,6 @@ export default function App() {
                         <Column id="i" label="ĭ" words={items.i} />
                     </div>
 
-                    {/*  pula kart do przeciągania  */}
                     <Pool id="pool" words={items.pool} />
                 </DndContext>
 

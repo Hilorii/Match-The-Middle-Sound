@@ -123,3 +123,9 @@ button.submit-btn:hover {
 }
 
 .pool.drag-over { background: #d6e4ff; }
+/* zapobiega przewijaniu strony podczas przeciągania */
+.board,
+.column,
+.pool {
+  touch-action: none;          /* iOS & Android */
+}

@@ -2,20 +2,16 @@ import { useDroppable } from '@dnd-kit/core';
 import Card from './Card';
 import type { Word } from '../data/words';
 
-type Props = {
-    id: 'a' | 'i';
-    label: string;    // wyświetlana samogłoska (ă / ĭ)
-    words: Word[];
-};
+type Props = { id: 'a' | 'i'; label: string; words: Word[] };
 
 export default function Column({ id, label, words }: Props) {
     const { setNodeRef, isOver } = useDroppable({ id });
 
-    /*  TTS po tapnięciu w nagłówek  */
+    /*  TTS – działa po gestowym kliknięciu  */
     const speak = () => {
         const utter = new SpeechSynthesisUtterance(label === 'ă' ? 'a' : 'i');
-        utter.lang = 'en-US';
-        utter.rate = 0.8;
+        utter.lang  = 'en-US';
+        utter.rate  = 0.8;
         window.speechSynthesis.cancel();
         window.speechSynthesis.speak(utter);
     };
@@ -25,7 +21,6 @@ export default function Column({ id, label, words }: Props) {
             <h3 onClick={speak} role="button" aria-label={`hear ${label}`}>
                 /{label}/
             </h3>
-
             {words.map((w) => (
                 <Card key={w.id} id={w.id} emoji={w.emoji} />
             ))}
