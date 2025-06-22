@@ -61,26 +61,27 @@ export default function App() {
         });
     };
 
-    /* -------- walidacja + RESET -------- */
+    /* -------- walidacja + dźwięk + RESET -------- */
     const checkAnswers = () => {
         const wrongA = items.a.filter((w) => w.vowel !== 'a');
         const wrongI = items.i.filter((w) => w.vowel !== 'i');
         const done   = items.pool.length === 0;
         const ok     = !wrongA.length && !wrongI.length && done;
 
+        /* puść odpowiedni dźwięk — bez czekania */
         const ref = ok ? winRef.current : loseRef.current;
         if (ref) {
             ref.currentTime = 0;
-            ref.play();
+            ref.play().catch(() => {/* ignorujemy błędy autoplay */});
         }
 
+        /* alert równocześnie z audio */
         alert(ok ? 'Great job! 🎉' : 'Try again 🙈');
 
-        /* ---- reset: nowe losowanie 3+3 ---- */
+        /* nowe losowanie 3 × a + 3 × i */
         setItems({ pool: getRandomWords(), a: [], i: [] });
     };
 
-    /* -------- UI -------- */
     return (
         <div className="wrapper">
             <h1 className="title">Match&nbsp;the&nbsp;Middle&nbsp;Sound</h1>
