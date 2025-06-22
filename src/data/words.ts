@@ -57,18 +57,16 @@ function sample<T>(arr: T[], n: number): T[] {
     return [...arr].sort(() => Math.random() - 0.5).slice(0, n);
 }
 
-/* → losuje 2 różne dźwięki + 3 słowa dla każdego */
 export function getRound() {
     const sounds = sample(Object.keys(BANK) as Sound[], 2) as [Sound, Sound];
 
-    /* 1-5 kart dla sound[0], reszta dla sound[1] */
-    const k  = Math.floor(Math.random() * 5) + 1;
-    const k2 = 6 - k;
+    const k  = Math.floor(Math.random() * 5) + 1;     // 1…5 kart dla 1-go dźwięku
+    const k2 = 6 - k;                                 // reszta dla 2-go
 
     const pool = [
         ...sample(BANK[sounds[0]], k),
         ...sample(BANK[sounds[1]], k2),
-    ];
+    ].sort(() => Math.random() - 0.5);
 
     return { sounds, pool };
 }
