@@ -33,7 +33,7 @@ function getBadge(w: number) {
 
 export default function App() {
     const makeRound = () => {
-        const { sounds, pool } = getRound();                  // ← z data/words
+        const { sounds, pool } = getRound();
         return {
             sounds,
             boxes: { pool, [sounds[0]]: [], [sounds[1]]: [] } as Boxes,

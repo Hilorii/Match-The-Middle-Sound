@@ -13,7 +13,7 @@ export default function Column({ id, label, words }: Props) {
 
     /* — odtwarzamy gotowy plik audio zamiast TTS — */
     const playSound = () => {
-        const audio = new Audio(`/audio/${id}.mp3`);
+        const audio = new Audio(`/audio/${id}.mkv`);
         audio.play().catch(() => {});
     };
 
