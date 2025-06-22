@@ -1,19 +1,17 @@
 import { useDroppable } from '@dnd-kit/core';
-import Card from './Card';
 import type { Word } from '../data/words';
 
-type Props = {
-    id: 'a' | 'i';
-    label: string;
+interface Props {
+    id: string;        // 'a' | 'i' | 'o' | 'e' | 'u'
+    label: string;     // np. 'ă'
     words: Word[];
-};
+}
 
 export default function Column({ id, label, words }: Props) {
     const { setNodeRef, isOver } = useDroppable({ id });
 
-    /* TTS po tapnięciu w nagłówek */
     const speak = () => {
-        const utter = new SpeechSynthesisUtterance(label === 'ă' ? 'a' : 'i');
+        const utter = new SpeechSynthesisUtterance(label);
         utter.lang = 'en-US';
         utter.rate = 0.8;
         window.speechSynthesis.cancel();
@@ -21,16 +19,16 @@ export default function Column({ id, label, words }: Props) {
     };
 
     return (
-        <div
-            ref={setNodeRef}
-            className={`column ${isOver ? 'drag-over' : ''}`}
-        >
+        <div ref={setNodeRef} className={`column ${isOver ? 'drag-over' : ''}`}>
             <h3 onClick={speak} role="button" aria-label={`hear ${label}`}>
                 /{label}/
             </h3>
 
             {words.map((w) => (
-                <Card key={w.id} id={w.id} emoji={w.emoji} />
+                <div key={w.id} id={w.id} className="card">
+                    <div className="half-circle" />
+                    <span className="emoji">{w.emoji}</span>
+                </div>
             ))}
         </div>
     );
