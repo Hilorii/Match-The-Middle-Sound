@@ -10,9 +10,9 @@ import type { DragEndEvent } from '@dnd-kit/core';
 import type { Word } from './data/words';
 import Column from './components/Column';
 import Pool   from './components/Pool';
-import { words as initial} from './data/words';
+import { getRandomWords } from './data/words';
 
-/* ------ audio pliki przez bundler ------ */
+/* pliki audio (jak wcześniej) */
 import winMp3  from '/audio/win.mp3?url';
 import loseMp3 from '/audio/lose.mp3?url';
 
@@ -20,11 +20,11 @@ type Boxes = { pool: Word[]; a: Word[]; i: Word[] };
 
 export default function App() {
     /* -------- stan kart -------- */
-    const [items, setItems] = useState<Boxes>({
-        pool: initial,
+    const [items, setItems] = useState<Boxes>(() => ({
+        pool: getRandomWords(),
         a: [],
         i: [],
-    });
+    }));
 
     /* -------- audio refs -------- */
     const winRef  = useRef<HTMLAudioElement | null>(null);
@@ -61,13 +61,12 @@ export default function App() {
         });
     };
 
-    /* -------- walidacja + dźwięk + RESET -------- */
+    /* -------- walidacja + RESET -------- */
     const checkAnswers = () => {
         const wrongA = items.a.filter((w) => w.vowel !== 'a');
         const wrongI = items.i.filter((w) => w.vowel !== 'i');
         const done   = items.pool.length === 0;
-
-        const ok = !wrongA.length && !wrongI.length && done;
+        const ok     = !wrongA.length && !wrongI.length && done;
 
         const ref = ok ? winRef.current : loseRef.current;
         if (ref) {
@@ -77,8 +76,8 @@ export default function App() {
 
         alert(ok ? 'Great job! 🎉' : 'Try again 🙈');
 
-        /* -- RESET: wszystkie karty wracają do pool -- */
-        setItems({ pool: [...initial], a: [], i: [] });
+        /* ---- reset: nowe losowanie 3+3 ---- */
+        setItems({ pool: getRandomWords(), a: [], i: [] });
     };
 
     /* -------- UI -------- */
@@ -93,7 +92,6 @@ export default function App() {
                         <Column id="i" label="ĭ" words={items.i} />
                     </div>
 
-                    {/* pula kart */}
                     <Pool id="pool" words={items.pool} />
                 </DndContext>
 
