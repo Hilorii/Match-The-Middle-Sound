@@ -24,7 +24,7 @@ html, body {
 /* ----- tytuł ----- */
 .title {
   font-family: 'Fredoka One', cursive;
-  font-size: 2.8rem;
+  font-size: clamp(1.2rem, 6vw, 4rem);
   font-weight: 700;
   text-align: center;
   color: #2faaff;
@@ -67,6 +67,11 @@ html, body {
   cursor: pointer;
   user-select: none;
   color: #2b4eff;
+
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none;     /* IE10+ */
+  -webkit-tap-highlight-color: transparent; /* usuwa niebieski flash */
+  outline: none; /* usuwa ramkę focusa (dla klawiatury też) */
 }
 .column h3:hover {
   color: #1734c8;
@@ -88,10 +93,7 @@ html, body {
   box-shadow: 0 2px 4px rgba(0,0,0,.05);
   user-select: none;
 }
-/*.card:hover {*/
-/*  scale: 1.1;*/
-/*  transition: ease-in 0.2s;*/
-/*}*/
+
 
 /* ----- przycisk Submit ----- */
 button.submit-btn {

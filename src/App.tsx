@@ -19,13 +19,14 @@ import loseMp3 from '/audio/lose.mp3?url';
 type Boxes = { pool: Word[]; a: Word[]; i: Word[] };
 
 export default function App() {
+    /* -------- stan kart -------- */
     const [items, setItems] = useState<Boxes>({
         pool: initial,
         a: [],
         i: [],
     });
 
-    /* ------ audio refs (po jednym obiekcie) ------ */
+    /* -------- audio refs -------- */
     const winRef  = useRef<HTMLAudioElement | null>(null);
     const loseRef = useRef<HTMLAudioElement | null>(null);
 
@@ -34,8 +35,7 @@ export default function App() {
         loseRef.current = new Audio(loseMp3);
     }, []);
 
-
-    /* ------ DnD sensors: pointer + touch (fallback) ------ */
+    /* -------- DnD sensors -------- */
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
         useSensor(TouchSensor,   { activationConstraint: { delay: 150, tolerance: 5 } })
@@ -61,7 +61,7 @@ export default function App() {
         });
     };
 
-    /* ---------- walidacja + audio ---------- */
+    /* -------- walidacja + dźwięk + RESET -------- */
     const checkAnswers = () => {
         const wrongA = items.a.filter((w) => w.vowel !== 'a');
         const wrongI = items.i.filter((w) => w.vowel !== 'i');
@@ -69,7 +69,6 @@ export default function App() {
 
         const ok = !wrongA.length && !wrongI.length && done;
 
-        /* ----- ODTWÓRZ WŁAŚCIWY DŹWIĘK ----- */
         const ref = ok ? winRef.current : loseRef.current;
         if (ref) {
             ref.currentTime = 0;
@@ -77,9 +76,12 @@ export default function App() {
         }
 
         alert(ok ? 'Great job! 🎉' : 'Try again 🙈');
+
+        /* -- RESET: wszystkie karty wracają do pool -- */
+        setItems({ pool: [...initial], a: [], i: [] });
     };
 
-    /* ------ UI ------ */
+    /* -------- UI -------- */
     return (
         <div className="wrapper">
             <h1 className="title">Match&nbsp;the&nbsp;Middle&nbsp;Sound</h1>
@@ -91,6 +93,7 @@ export default function App() {
                         <Column id="i" label="ĭ" words={items.i} />
                     </div>
 
+                    {/* pula kart */}
                     <Pool id="pool" words={items.pool} />
                 </DndContext>
 
