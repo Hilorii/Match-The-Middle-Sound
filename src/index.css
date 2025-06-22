@@ -4,12 +4,11 @@
 html, body {
   min-height: 100%;
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
-  /* lekki gradient tła */
   background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
   color: #111;
 }
 
-/* ----- wrapper (cała strona) ----- */
+/* ----- wrapper ----- */
 .wrapper {
   width: 100%;
   min-height: 100dvh;
@@ -32,7 +31,7 @@ html, body {
   margin-top: 1.5rem;
 }
 
-/* ----- tablica (board) ----- */
+/* ----- tablica ----- */
 .board {
   width: 100%;
   max-width: 500px;
@@ -56,6 +55,7 @@ html, body {
   border: 2px dashed #a5c9ff;
   border-radius: 14px;
   padding: 0.5rem;
+  overflow: visible;            /* wcięcie może wystawać */
 }
 
 .column.drag-over { background: #d6e4ff; }
@@ -67,11 +67,7 @@ html, body {
   cursor: pointer;
   user-select: none;
   color: #2b4eff;
-
-  -webkit-user-select: none; /* Safari */
-  -ms-user-select: none;     /* IE10+ */
-  -webkit-tap-highlight-color: transparent; /* usuwa niebieski flash */
-  outline: none; /* usuwa ramkę focusa (dla klawiatury też) */
+  -webkit-tap-highlight-color: transparent;
 }
 .column h3:hover {
   color: #1734c8;
@@ -79,21 +75,44 @@ html, body {
   transition: ease-in 0.2s;
 }
 
-/* ----- karta ----- */
+/* === KARTA-PUZZEL ================================================= */
 .card {
+  position: relative;
+  width: 80px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.7rem;
-  height: 64px;
-  margin-bottom: 0.5rem;
+  font-size: 2rem;
   background: #ffffff;
-  border-radius: 14px;
   border: 1px solid #e0e0e0;
+  border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0,0,0,.05);
   user-select: none;
+  overflow: visible;
 }
 
+/* wycięcie (półkole) po LEWEJ */
+.half-circle {
+  position: absolute;
+  left: -16px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-right: none;
+  border-radius: 50%;
+  pointer-events: none;
+  clip-path: inset(0 50% 0 0);
+}
+
+/* emoji wewnątrz */
+.emoji {
+  position: relative;
+  z-index: 1;
+}
 
 /* ----- przycisk Submit ----- */
 button.submit-btn {
@@ -120,14 +139,13 @@ button.submit-btn:hover {
   margin-top: 1rem;
   padding: 0.5rem;
   border-radius: 14px;
-  background: #f1f5ff;
+  background: #f0f8ff;
   min-height: 80px;
 }
 
 .pool.drag-over { background: #d6e4ff; }
-/* zapobiega przewijaniu strony podczas przeciągania */
+
+/* wyłącz scroll/zoom gesty podczas drag */
 .board,
 .column,
-.pool {
-  touch-action: none;          /* iOS & Android */
-}
+.pool { touch-action: none; }

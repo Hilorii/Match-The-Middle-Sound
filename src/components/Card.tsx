@@ -1,21 +1,39 @@
-import React from 'react';
 import { useDraggable } from '@dnd-kit/core';
-import { CSS } from '@dnd-kit/utilities';
 
-type Props = { id: string; emoji: string };
+interface CardProps {
+    id: string;
+    emoji: string;
+}
 
-export default function Card({ id, emoji }: Props) {
-    const { attributes, listeners, setNodeRef, transform, isDragging } =
-        useDraggable({ id });
+export default function Card({ id, emoji }: CardProps) {
+    const {
+        attributes,
+        listeners,
+        setNodeRef,
+        transform,
+        isDragging,
+    } = useDraggable({ id });
 
     const style: React.CSSProperties = {
-        transform: CSS.Translate.toString(transform),
+        transform: transform
+            ? `translate3d(${transform.x}px, ${transform.y}px, 0)`
+            : undefined,
         opacity: isDragging ? 0.4 : 1,
     };
 
     return (
-        <div ref={setNodeRef} className="card" style={style} {...listeners} {...attributes}>
-            {emoji}
+        <div
+            ref={setNodeRef}
+            className="card"
+            style={style}
+            {...listeners}
+            {...attributes}
+        >
+            {/* wcięcie puzzla */}
+            <div className="half-circle" />
+
+            {/* zawartość */}
+            <span className="emoji">{emoji}</span>
         </div>
     );
 }
