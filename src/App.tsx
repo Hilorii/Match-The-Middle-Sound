@@ -25,9 +25,9 @@ function soundToLabel(s: string) {
 }
 
 function getBadge(w: number) {
-    if (w >= 30) return '🏆 Master';
-    if (w >= 15) return '🥈 Silver Star';
-    if (w >= 5)  return '🥉 Bronze Star';
+    if (w >= 3) return '🏆 Master';
+    if (w >= 2) return '🥈 Silver Star';
+    if (w >= 1)  return '🥉 Bronze Star';
     return null;
 }
 
