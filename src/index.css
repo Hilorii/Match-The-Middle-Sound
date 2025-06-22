@@ -140,6 +140,7 @@ button.submit-btn:hover {
 /* ----- pula kart ----- */
 .pool {
   display: flex;
+  justify-content: space-evenly;
   flex-wrap: wrap;
   gap: 0.5rem;
   margin-top: 1rem;
@@ -151,7 +152,6 @@ button.submit-btn:hover {
 
 .pool.drag-over { background: #d6e4ff; }
 
-/* wyłącz scroll/zoom gesty podczas drag */
 .board,
 .column,
 .pool { touch-action: none; }
@@ -244,4 +244,22 @@ button.submit-btn:hover {
 }
 .reset-btn:hover{
   background:#ef4444;
+}
+
+.hint-title{
+  font-weight:600;
+  margin-top:.5rem;
+  margin-bottom:.25rem;
+}
+.wrong-list{
+  list-style:none;
+  padding-left:0;
+  margin-bottom:1rem;
+}
+.wrong-list li{
+  margin:.25rem 0;
+  font-size:1rem;
+}
+.wrong-list .emoji{
+  font-size:1.5rem;
 }

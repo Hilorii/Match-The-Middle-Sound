@@ -3,7 +3,7 @@ import Card from './Card';
 import type { Word } from '../data/words';
 
 type Props = {
-    id: string;      // 'pool'
+    id: string;
     words: Word[];
 };
 

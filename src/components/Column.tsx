@@ -1,4 +1,5 @@
 import { useDroppable } from '@dnd-kit/core';
+import Card from './Card';
 import type { Word } from '../data/words';
 
 interface Props {
@@ -10,10 +11,10 @@ interface Props {
 export default function Column({ id, label, words }: Props) {
     const { setNodeRef, isOver } = useDroppable({ id });
 
-    /* ---- odtwarzamy gotowy plik audio zamiast TTS ---- */
+    /* — odtwarzamy gotowy plik audio zamiast TTS — */
     const playSound = () => {
-        const audio = new Audio(`/audio/${id}.mkv`);
-        audio.play().catch(() => {/* ignorujemy błędy autoplay */});
+        const audio = new Audio(`/audio/${id}.mp3`);
+        audio.play().catch(() => {});
     };
 
     return (
@@ -23,11 +24,8 @@ export default function Column({ id, label, words }: Props) {
             </h3>
 
             {words.map((w) => (
-                <div key={w.id} id={w.id} className="card">
-                    <div className="half-circle" />
-                    <span className="emoji">{w.emoji}</span>
-                </div>
-            ))}
+                <Card key={w.id} id={w.id} emoji={w.emoji} />
+                ))}
         </div>
     );
 }

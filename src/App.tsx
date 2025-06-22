@@ -4,23 +4,24 @@ import {
     PointerSensor,
     TouchSensor,
     useSensor,
-    useSensors,
+    useSensors
 } from '@dnd-kit/core';
 import type { DragEndEvent } from '@dnd-kit/core';
-import type { Word } from './data/words';
-import Column   from './components/Column';
-import Pool     from './components/Pool';
-import Modal    from './components/Modal';
-import Progress from './components/Progress';
+import Column    from './components/Column';
+import Pool      from './components/Pool';
+import Modal     from './components/Modal';
+import Progress  from './components/Progress';
 
 import { getRound } from './data/words';
+import type { Word } from './data/words';
+
 import winMp3  from '/audio/win.mp3?url';
 import loseMp3 from '/audio/lose.mp3?url';
 
 type Boxes = Record<string, Word[]> & { pool: Word[] };
 
 function soundToLabel(s: string) {
-    return ({ a:'ă', i:'ĭ', o:'ŏ', e:'ĕ', u:'ŭ' } as Record<string,string>)[s] || s;
+    return ({ a: 'ă', i: 'ĭ', o: 'ŏ', e: 'ĕ', u: 'ŭ' } as Record<string, string>)[s] || s;
 }
 
 function getBadge(w: number) {
@@ -31,32 +32,33 @@ function getBadge(w: number) {
 }
 
 export default function App() {
-    /* --- round state --- */
-    const makeBoxes = () => {
-        const { sounds, pool } = getRound();
+    const makeRound = () => {
+        const { sounds, pool } = getRound();                  // ← z data/words
         return {
             sounds,
             boxes: { pool, [sounds[0]]: [], [sounds[1]]: [] } as Boxes,
         };
     };
-    const [{ sounds, boxes }, setState] = useState(makeBoxes);
+    const [{ sounds, boxes }, setRound] = useState(makeRound);
 
-    /* --- progress --- */
-    const [wins,     setWins]     = useState(() => Number(localStorage.getItem('wins') ?? 0));
+    const [wins,     setWins]     = useState(() => Number(localStorage.getItem('wins')     ?? 0));
     const [attempts, setAttempts] = useState(() => Number(localStorage.getItem('attempts') ?? 0));
     const badge = getBadge(wins);
 
     const resetProgress = () => {
-        localStorage.clear();
-        setWins(0); setAttempts(0);
+        localStorage.removeItem('wins');
+        localStorage.removeItem('attempts');
+        setWins(0);
+        setAttempts(0);
     };
 
-    /* --- modal --- */
-    const [modal, setModal] = useState<{open:boolean; msg:string; type:'win'|'lose'}>({
-        open:false, msg:'', type:'win'
-    });
+    const [modal, setModal] = useState<{
+        open: boolean;
+        msg: string;
+        type: 'win' | 'lose';
+        wrong: Word[];
+    }>({ open: false, msg: '', type: 'win', wrong: [] });
 
-    /* --- audio refs --- */
     const winRef  = useRef<HTMLAudioElement | null>(null);
     const loseRef = useRef<HTMLAudioElement | null>(null);
     useEffect(() => {
@@ -64,7 +66,6 @@ export default function App() {
         loseRef.current = new Audio(loseMp3);
     }, []);
 
-    /* --- sensors --- */
     const sensors = useSensors(
         useSensor(PointerSensor, { activationConstraint: { distance: 8 } }),
         useSensor(TouchSensor,   { activationConstraint: { delay: 150, tolerance: 5 } })
@@ -74,47 +75,59 @@ export default function App() {
         const { active, over } = e;
         if (!over) return;
 
-        const fromKey = (['pool', ...sounds] as string[]).find(key =>
-            boxes[key].some(w => w.id === active.id)
+        const fromKey = (['pool', ...sounds] as string[]).find((k) =>
+            boxes[k].some((w) => w.id === active.id)
         );
         const toKey = over.id as string;
         if (!fromKey || fromKey === toKey) return;
 
-        setState(s => ({
-            ...s,
+        setRound((prev) => ({
+            ...prev,
             boxes: {
-                ...s.boxes,
-                [fromKey]: s.boxes[fromKey].filter(w => w.id !== active.id),
-                [toKey]:   [...s.boxes[toKey], s.boxes[fromKey].find(w => w.id === active.id)!],
+                ...prev.boxes,
+                [fromKey]: prev.boxes[fromKey].filter((w) => w.id !== active.id),
+                [toKey]:   [...prev.boxes[toKey], prev.boxes[fromKey].find((w) => w.id === active.id)!],
             },
         }));
     };
 
-    /* --- check, popup, next round --- */
+    /* --------- submit ----------------------------------------- */
     const checkAnswers = () => {
-        const ok =
-            boxes[sounds[0]].every(w => w.vowel === sounds[0]) &&
-            boxes[sounds[1]].every(w => w.vowel === sounds[1]) &&
-            boxes.pool.length === 0;
+        const wrong = [
+            ...boxes[sounds[0]].filter((w) => w.vowel !== sounds[0]),
+            ...boxes[sounds[1]].filter((w) => w.vowel !== sounds[1]),
+        ];
+        const ok = wrong.length === 0 && boxes.pool.length === 0;
 
-        (ok ? winRef.current : loseRef.current)?.play().catch(()=>{});
+        (ok ? winRef.current : loseRef.current)?.play().catch(() => {});
 
-        setAttempts(a => { const n=a+1; localStorage.setItem('attempts', String(n)); return n; });
-        if (ok) setWins(w => { const n=w+1; localStorage.setItem('wins', String(n)); return n; });
+        setAttempts((a) => {
+            const n = a + 1;
+            localStorage.setItem('attempts', String(n));
+            return n;
+        });
+        if (ok) {
+            setWins((w) => {
+                const n = w + 1;
+                localStorage.setItem('wins', String(n));
+                return n;
+            });
+        }
 
         setModal({
-            open:true,
+            open: true,
             msg: ok ? 'Great job! 🎉' : 'Try again 🙈',
             type: ok ? 'win' : 'lose',
+            wrong,
         });
     };
 
+    /* --------- zamknięcie modala → nowa runda ------------------ */
     const closeModal = () => {
-        setState(makeBoxes);                               // nowa losowa runda
         setModal((m) => ({ ...m, open: false }));
+        setRound(makeRound());
     };
 
-    /* --- UI --- */
     return (
         <div className="wrapper">
             <h1 className="title">Match&nbsp;the&nbsp;Middle&nbsp;Sound</h1>
@@ -146,6 +159,7 @@ export default function App() {
                 <Modal
                     message={modal.msg}
                     type={modal.type}
+                    wrong={modal.wrong}
                     onClose={closeModal}
                 />
             )}

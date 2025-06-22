@@ -29,10 +29,7 @@ export default function Card({ id, emoji }: CardProps) {
             {...listeners}
             {...attributes}
         >
-            {/* wcięcie puzzla */}
             <div className="half-circle" />
-
-            {/* zawartość */}
             <span className="emoji">{emoji}</span>
         </div>
     );
