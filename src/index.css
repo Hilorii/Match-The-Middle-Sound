@@ -193,3 +193,55 @@ button.submit-btn:hover {
   background: #6366f1;
   cursor: pointer;
 }
+
+/* ==== PROGRESS BAR & BADGES ==================================== */
+.progress-wrapper{
+  width:100%;
+  max-width:500px;
+  position:relative;
+  height:18px;
+  background:#e5e7eb;
+  border-radius:9999px;
+  overflow:hidden;
+}
+.progress-bar{
+  height:100%;
+  background:#4ade80;
+  transition:width .3s;
+}
+.progress-label{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:.8rem;
+  font-weight:600;
+  color:#111;
+}
+.badge{
+  margin-left:.4rem;
+  padding:.1rem .4rem;
+  border-radius:9999px;
+  background:#facc15;
+  color:#111;
+  font-size:.75rem;
+}
+
+.reset-btn{
+  position:absolute;
+  right:4px;
+  top:50%;
+  transform:translateY(-50%);
+  border:none;
+  background:#f87171;
+  color:#fff;
+  width:26px;
+  height:26px;
+  border-radius:50%;
+  font-size:1rem;
+  cursor:pointer;
+}
+.reset-btn:hover{
+  background:#ef4444;
+}
