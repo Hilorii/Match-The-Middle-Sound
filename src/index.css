@@ -48,6 +48,7 @@ html, body {
   gap: 0.75rem;
 }
 
+/* >>> każda kolumna = siatka puzzli */
 .column {
   flex: 1;
   min-height: 260px;
@@ -55,12 +56,17 @@ html, body {
   border: 2px dashed #a5c9ff;
   border-radius: 14px;
   padding: 0.5rem;
-  overflow: visible;            /* wcięcie może wystawać */
+
+  display: flex;            /* <— NOWE */
+  flex-wrap: wrap;          /* <— NOWE */
+  gap: 0.5rem;              /* <— NOWE */
+  align-content: flex-start;/* <— NOWE */
 }
 
 .column.drag-over { background: #d6e4ff; }
 
 .column h3 {
+  width: 100%;
   text-align: center;
   margin-bottom: 0.5rem;
   font-size: 1.3rem;
@@ -92,7 +98,7 @@ html, body {
   overflow: visible;
 }
 
-/* wycięcie (półkole) po LEWEJ */
+/* wcięcie (półkole) po LEWEJ */
 .half-circle {
   position: absolute;
   left: -16px;
