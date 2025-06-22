@@ -1,0 +1,125 @@
+/* ----- RESET mobile-first ----- */
+* { margin: 0; box-sizing: border-box; }
+
+html, body {
+  min-height: 100%;
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  /* lekki gradient tła */
+  background: linear-gradient(135deg, #fdfcfb 0%, #e2d1c3 100%);
+  color: #111;
+}
+
+/* ----- wrapper (cała strona) ----- */
+.wrapper {
+  width: 100%;
+  min-height: 100dvh;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+}
+
+/* ----- tytuł ----- */
+.title {
+  font-family: 'Fredoka One', cursive;
+  font-size: 2.8rem;
+  font-weight: 700;
+  text-align: center;
+  color: #2faaff;
+  text-shadow: 2px 2px 0 #fff0f0;
+  margin-top: 1.5rem;
+}
+
+/* ----- tablica (board) ----- */
+.board {
+  width: 100%;
+  max-width: 500px;
+  background: rgba(255, 255, 255, 0.85);
+  border-radius: 20px;
+  border: #7183f8 solid 5px;
+  padding: 1rem;
+  box-shadow: 0 6px 20px rgba(0,0,0,.08);
+}
+
+/* ----- kolumny ----- */
+.columns {
+  display: flex;
+  gap: 0.75rem;
+}
+
+.column {
+  flex: 1;
+  min-height: 260px;
+  background: #f0f8ff;
+  border: 2px dashed #a5c9ff;
+  border-radius: 14px;
+  padding: 0.5rem;
+}
+
+.column.drag-over { background: #d6e4ff; }
+
+.column h3 {
+  text-align: center;
+  margin-bottom: 0.5rem;
+  font-size: 1.3rem;
+  cursor: pointer;
+  user-select: none;
+  color: #2b4eff;
+}
+.column h3:hover {
+  color: #1734c8;
+  scale: 1.2;
+  transition: ease-in 0.2s;
+}
+
+/* ----- karta ----- */
+.card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.7rem;
+  height: 64px;
+  margin-bottom: 0.5rem;
+  background: #ffffff;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  box-shadow: 0 2px 4px rgba(0,0,0,.05);
+  user-select: none;
+}
+.card:hover {
+  scale: 1.1;
+  transition: ease-in 0.2s;
+}
+
+/* ----- przycisk Submit ----- */
+button.submit-btn {
+  margin-top: 1rem;
+  width: 100%;
+  padding: 0.8rem;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 9999px;
+  background: #8394f1;
+  color: #fff;
+}
+button.submit-btn:hover {
+  scale: 0.97;
+  background: #4856a8;
+  transition: ease-in 0.2s;
+}
+
+/* ----- pula kart ----- */
+.pool {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding: 0.5rem;
+  border-radius: 14px;
+  background: #f1f5ff;
+  min-height: 80px;
+}
+
+.pool.drag-over { background: #d6e4ff; }
