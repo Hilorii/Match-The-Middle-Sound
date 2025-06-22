@@ -6,7 +6,7 @@ export type Word = {
     vowel: Sound;
 };
 
-/* short ă  */
+/* ă  */
 const A: Word[] = [
     { id: 'cat',  emoji: '🐱', vowel: 'a' },
     { id: 'hat',  emoji: '🎩', vowel: 'a' },
@@ -15,7 +15,7 @@ const A: Word[] = [
     { id: 'map',  emoji: '🗺️', vowel: 'a' },
 ];
 
-/* short ĭ  */
+/* ĭ  */
 const I: Word[] = [
     { id: 'pig',  emoji: '🐷', vowel: 'i' },
     { id: 'fish', emoji: '🐟', vowel: 'i' },
@@ -25,7 +25,7 @@ const I: Word[] = [
     { id: 'hill', emoji: '⛰️', vowel: 'i' },
 ];
 
-/* short ŏ  */
+/* ŏ  */
 const O: Word[] = [
     { id: 'dog',  emoji: '🐶', vowel: 'o' },
     { id: 'fox',  emoji: '🦊', vowel: 'o' },
@@ -34,7 +34,7 @@ const O: Word[] = [
     { id: 'log',  emoji: '🪵', vowel: 'o' },
 ];
 
-/* short ĕ  */
+/* ĕ  */
 const E: Word[] = [
     { id: 'pen',  emoji: '🖊️', vowel: 'e' },
     { id: 'ten',  emoji: '🔟',  vowel: 'e' },
@@ -42,7 +42,7 @@ const E: Word[] = [
     { id: 'bed',  emoji: '🛏️', vowel: 'e' },
 ];
 
-/* short ŭ  */
+/* ŭ  */
 const U: Word[] = [
     { id: 'cup',  emoji: '☕',  vowel: 'u' },
     { id: 'bus',  emoji: '🚌', vowel: 'u' },
